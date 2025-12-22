@@ -35,24 +35,27 @@ public class ControlPanel extends JPanel {
         this.assembler = new Assembler();
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBackground(new Color(210, 170, 180));
-        setBorder(BorderFactory.createTitledBorder("Contrôle"));
+        setBackground(Theme.PANEL);
+        setBorder(Theme.createTitledBorder("Contrôle"));
 
         // Panel 1: Compilation button
         JPanel compilationPanel = new JPanel();
-        compilationPanel.setBackground(new Color(210, 170, 180));
+        compilationPanel.setBackground(Theme.PANEL_LIGHT);
         
         compileBtn = new JButton("COMPILER");
         compileBtn.setFont(new Font("Arial", Font.BOLD, 12));
         compileBtn.setForeground(new Color(0, 100, 0));
         compileBtn.addActionListener(e -> handleCompile());
         
-        compilationPanel.add(new JLabel("1. Modifier code ci-dessus, puis :"));
+        JLabel label1 = new JLabel("1. Modifier code ci-dessus, puis :");
+        label1.setFont(new Font("Monospaced", Font.BOLD, 14));
+        label1.setForeground(Theme.ACCENT_BRIGHT);
+        compilationPanel.add(label1);
         compilationPanel.add(compileBtn);
 
         // Panel 2: Execution buttons
         JPanel executionPanel = new JPanel();
-        executionPanel.setBackground(new Color(210, 170, 180));
+        executionPanel.setBackground(Theme.PANEL_LIGHT);
         
         stepBtn = new JButton("STEP");
         runBtn = new JButton("RUN");
@@ -64,7 +67,10 @@ public class ControlPanel extends JPanel {
         pauseBtn.addActionListener(e -> handlePause());
         resetBtn.addActionListener(e -> handleReset());
         
-        executionPanel.add(new JLabel("2. Exécution :"));
+        JLabel label2 = new JLabel("2. Exécution :");
+        label2.setFont(new Font("Monospaced", Font.BOLD, 14));
+        label2.setForeground(Theme.ACCENT_BRIGHT);
+        executionPanel.add(label2);
         executionPanel.add(stepBtn);
         executionPanel.add(runBtn);
         executionPanel.add(pauseBtn);
@@ -72,7 +78,7 @@ public class ControlPanel extends JPanel {
 
         // Panel 3: Breakpoint buttons
         JPanel breakpointPanel = new JPanel();
-        breakpointPanel.setBackground(new Color(210, 170, 180));
+        breakpointPanel.setBackground(Theme.PANEL_LIGHT);
         
         addBreakpointBtn = new JButton("Add Breakpoint");
         clearBreakpointsBtn = new JButton("Clear Breakpoints");
@@ -88,8 +94,8 @@ public class ControlPanel extends JPanel {
 
         // Status label
         statusLabel = new JLabel("Status: Ready - Compilez d'abord");
-        statusLabel.setFont(new Font("Monospaced", Font.BOLD, 12));
-        statusLabel.setForeground(Color.DARK_GRAY);
+        statusLabel.setFont(new Font("Monospaced", Font.BOLD, 14));
+        statusLabel.setForeground(Theme.ACCENT_BRIGHT);
 
         add(compilationPanel);
         add(executionPanel);

@@ -35,6 +35,7 @@ public class CPU {
 
     private boolean halted;
     private boolean waiting;
+    private boolean extendedIndirectMode; // Flag pour mode d'adressage indirect étendu
 
     // =======================
     // ===== COMPOSANTS ======
@@ -115,6 +116,15 @@ public class CPU {
         }
 
         int opcode = fetchByte();
+        
+        // Vérifier le marqueur de mode indirect étendu
+        if (opcode == 0xFE) {
+            extendedIndirectMode = true;
+            opcode = fetchByte(); // Récupérer l'opcode réel
+        } else {
+            extendedIndirectMode = false;
+        }
+
         motobatata.instructions.Instruction instruction = motobatata.decoder.InstructionDecoder.decode(opcode, this);
 
         if (instruction != null) {
@@ -254,6 +264,9 @@ public class CPU {
     // =======================
 
     public boolean isHalted() { return halted; }
+    
+    public boolean isExtendedIndirectMode() { return extendedIndirectMode; }
+    public void setExtendedIndirectMode(boolean mode) { extendedIndirectMode = mode; }
     public void setHalted(boolean halted) { this.halted = halted; }
 
     public boolean isWaiting() { return waiting; }

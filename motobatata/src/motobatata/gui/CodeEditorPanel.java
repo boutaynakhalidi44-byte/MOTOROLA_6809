@@ -10,14 +10,15 @@ public class CodeEditorPanel extends JPanel {
 
     public CodeEditorPanel() {
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createTitledBorder("Code Assembleur 6809"));
-        setBackground(new Color(210,170,180));
+        setBorder(Theme.createTitledBorder("Code Assembleur 6809"));
+        setBackground(Theme.PANEL_LIGHTER);
 
         // Editor area
         editor = new JTextArea();
         editor.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        editor.setBackground(new Color(245,230,235));
-        editor.setCaretColor(Color.BLACK);
+        editor.setBackground(new Color(210, 185, 160));
+        editor.setForeground(new Color(40, 20, 5));
+        editor.setCaretColor(new Color(40, 20, 5));
 
         editor.setText(
             "; Exemple\n" +

@@ -13,8 +13,8 @@ public class RegisterPanel extends JPanel {
         this.cpu = cpu;
 
         setLayout(new GridLayout(10, 2, 5, 5));
-        setBorder(BorderFactory.createTitledBorder("Registres (Lecture Seule)"));
-        setBackground(new Color(190, 150, 160));
+        setBorder(Theme.createTitledBorder("Registres (Lecture Seule)"));
+        setBackground(Theme.PANEL_LIGHT);
 
         // 8-bit registers
         aLabel = addRegisterDisplay("A (8-bit)");
@@ -40,14 +40,14 @@ public class RegisterPanel extends JPanel {
     private JLabel addRegisterDisplay(String name) {
         JLabel nameLabel = new JLabel(name);
         nameLabel.setFont(new Font("Monospaced", Font.BOLD, 11));
-        nameLabel.setForeground(Color.WHITE);
+        nameLabel.setForeground(Theme.TEXT);
 
         JLabel valueLabel = new JLabel("00000000");
         valueLabel.setFont(new Font("Monospaced", Font.BOLD, 12));
-        valueLabel.setForeground(new Color(0, 255, 100));
+        valueLabel.setForeground(Theme.ACCENT_BRIGHT);
         valueLabel.setOpaque(true);
-        valueLabel.setBackground(new Color(30, 60, 40));
-        valueLabel.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+        valueLabel.setBackground(new Color(30, 50, 60));
+        valueLabel.setBorder(BorderFactory.createLineBorder(Theme.BORDER));
 
         add(nameLabel);
         add(valueLabel);

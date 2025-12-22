@@ -1,6 +1,7 @@
 package motobatata.addressing;
 
 import motobatata.cpu.CPU;
+import motobatata.memory.Memory;
 
 /**
  * Classe utilitaire pour calculer les adresses selon les différents modes d'adressage
@@ -22,6 +23,14 @@ public class AddressingMode {
 
     public static int extended(CPU cpu) {
         return cpu.fetchWord();
+    }
+
+    public static int extendedIndirect(CPU cpu, Memory memory) {
+        // Récupère l'adresse (16-bit)
+        int addressOfAddress = cpu.fetchWord();
+        // Utilise cette adresse comme pointeur pour récupérer l'adresse finale
+        int finalAddress = memory.readWord(addressOfAddress);
+        return finalAddress & 0xFFFF;
     }
 
     public static int relative8(CPU cpu) {

@@ -7,6 +7,7 @@ public enum AddressingModeType {
     IMMEDIATE,
     DIRECT,
     EXTENDED,
+    EXTENDED_INDIRECT,
     INDEXED,
     RELATIVE
 }

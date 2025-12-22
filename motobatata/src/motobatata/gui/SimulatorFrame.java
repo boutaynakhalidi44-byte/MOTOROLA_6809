@@ -16,7 +16,7 @@ public class SimulatorFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setIconImage(createIcon());
 
-        Color bg = new Color(210, 170, 180);
+        Color bg = Theme.BACKGROUND;
         getContentPane().setBackground(bg);
         setLayout(new BorderLayout(10, 10));
 
@@ -32,7 +32,7 @@ public class SimulatorFrame extends JFrame {
         // Left: Registers + Flags
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-        leftPanel.setBackground(bg);
+        leftPanel.setBackground(Theme.BACKGROUND);
         leftPanel.add(registerPanel);
         leftPanel.add(Box.createVerticalStrut(10));
         leftPanel.add(flagsPanel);
@@ -40,6 +40,7 @@ public class SimulatorFrame extends JFrame {
         
         JScrollPane leftScroll = new JScrollPane(leftPanel);
         leftScroll.setPreferredSize(new Dimension(250, 600));
+        leftScroll.getViewport().setBackground(Theme.BACKGROUND);
 
         // Center: Code Editor + Memory (split pane)
         JSplitPane centerSplit = new JSplitPane(
@@ -53,7 +54,7 @@ public class SimulatorFrame extends JFrame {
         // Right: UAL + Info
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        rightPanel.setBackground(bg);
+        rightPanel.setBackground(Theme.BACKGROUND);
         rightPanel.add(ualPanel);
         rightPanel.add(Box.createVerticalGlue());
         rightPanel.setPreferredSize(new Dimension(250, 600));

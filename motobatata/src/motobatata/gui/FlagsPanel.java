@@ -1,37 +1,68 @@
 package motobatata.gui;
 
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 import motobatata.cpu.CPU;
 
 public class FlagsPanel extends JPanel {
 
     private final CPU cpu;
-    private final JLabel flags;
+    private JLabel[] flagLabels;
+    private JLabel[] flagIndicators;
+    private String[] flagNames = {"E", "F", "H", "I", "N", "Z", "V", "C"};
+    private int[] flagMasks = {
+        CPU.CC_E, CPU.CC_F, CPU.CC_H, CPU.CC_I,
+        CPU.CC_N, CPU.CC_Z, CPU.CC_V, CPU.CC_C
+    };
 
     public FlagsPanel(CPU cpu) {
         this.cpu = cpu;
-        setBackground(Theme.PANEL);
-        setBorder(BorderFactory.createTitledBorder("FLAGS CC"));
+        setBackground(Theme.PANEL_LIGHTER);
+        setBorder(Theme.createTitledBorder("FLAGS CC"));
+        setLayout(new GridLayout(2, 8, 5, 5));
 
-        flags = new JLabel();
-        flags.setFont(Theme.FONT_NORMAL);
-        add(flags);
+        flagLabels = new JLabel[8];
+        flagIndicators = new JLabel[8];
+
+        // Créer les 8 flags avec labels et indicateurs
+        for (int i = 0; i < 8; i++) {
+            // Panel pour chaque flag
+            JPanel flagPanel = new JPanel();
+            flagPanel.setLayout(new BoxLayout(flagPanel, BoxLayout.Y_AXIS));
+            flagPanel.setBackground(Theme.PANEL_LIGHTER);
+
+            // Label du nom du flag
+            flagLabels[i] = new JLabel(flagNames[i]);
+            flagLabels[i].setFont(new Font("Monospaced", Font.BOLD, 12));
+            flagLabels[i].setForeground(Theme.TEXT);
+            flagLabels[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            // Indicateur coloré (point)
+            flagIndicators[i] = new JLabel("●");
+            flagIndicators[i].setFont(new Font("Monospaced", Font.BOLD, 16));
+            flagIndicators[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            flagPanel.add(Box.createVerticalGlue());
+            flagPanel.add(flagLabels[i]);
+            flagPanel.add(flagIndicators[i]);
+            flagPanel.add(Box.createVerticalGlue());
+
+            add(flagPanel);
+        }
 
         refresh();
     }
 
     public void refresh() {
-        flags.setText(String.format(
-            "E:%d F:%d H:%d I:%d N:%d Z:%d V:%d C:%d",
-            cpu.isFlagSet(CPU.CC_E) ? 1 : 0,
-            cpu.isFlagSet(CPU.CC_F) ? 1 : 0,
-            cpu.isFlagSet(CPU.CC_H) ? 1 : 0,
-            cpu.isFlagSet(CPU.CC_I) ? 1 : 0,
-            cpu.isFlagSet(CPU.CC_N) ? 1 : 0,
-            cpu.isFlagSet(CPU.CC_Z) ? 1 : 0,
-            cpu.isFlagSet(CPU.CC_V) ? 1 : 0,
-            cpu.isFlagSet(CPU.CC_C) ? 1 : 0
-        ));
+        // Mettre à jour les indicateurs de couleur
+        for (int i = 0; i < 8; i++) {
+            if (cpu.isFlagSet(flagMasks[i])) {
+                // Flag à 1 : bleu ciel
+                flagIndicators[i].setForeground(Theme.ACCENT_BRIGHT);
+            } else {
+                // Flag à 0 : marron/beige
+                flagIndicators[i].setForeground(new Color(150, 110, 70));
+            }
+        }
     }
 }

@@ -16,8 +16,8 @@ public class MemoryPanel extends JPanel {
         this.memory = memory;
 
         setLayout(new BorderLayout());
-        setBorder(BorderFactory.createTitledBorder("MÉMOIRE - LECTURE SEULE (0x0000 - 0xFFFF)"));
-        setBackground(Theme.PANEL);
+        setBorder(Theme.createTitledBorder("MÉMOIRE - LECTURE SEULE (0x0000 - 0xFFFF)"));
+        setBackground(Theme.PANEL_LIGHTER);
 
         // Control panel
         JPanel controlPanel = new JPanel();
@@ -26,8 +26,11 @@ public class MemoryPanel extends JPanel {
         
         JLabel addrLabel = new JLabel("Aller à l'adresse:");
         addrLabel.setFont(new Font("Monospaced", Font.BOLD, 11));
+        addrLabel.setForeground(new Color(40, 20, 5));
         addressField = new JTextField("0000", 10);
         addressField.setFont(Theme.FONT_NORMAL);
+        addressField.setBackground(new Color(230, 210, 185));
+        addressField.setForeground(new Color(40, 20, 5));
         
         JButton goButton = new JButton("Aller");
         goButton.addActionListener(e -> goToAddress());
@@ -49,8 +52,8 @@ public class MemoryPanel extends JPanel {
         area = new JTextArea(ROWS_TO_DISPLAY, 60);
         area.setFont(new Font("Monospaced", Font.PLAIN, 11));
         area.setEditable(false);  // Ensure it's completely read-only
-        area.setBackground(new Color(245, 230, 235));
-        area.setForeground(Color.DARK_GRAY);
+        area.setBackground(new Color(210, 185, 160));
+        area.setForeground(new Color(40, 20, 5));
         area.setLineWrap(false);
 
         JScrollPane scrollPane = new JScrollPane(area,

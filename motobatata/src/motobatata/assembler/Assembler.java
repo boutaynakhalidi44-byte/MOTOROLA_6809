@@ -81,7 +81,9 @@ public class Assembler {
         AddressingModeType mode = null;
         if (operand != null) {
             if (operand.startsWith("#")) mode = AddressingModeType.IMMEDIATE;
+            else if (operand.startsWith("[")) mode = AddressingModeType.EXTENDED_INDIRECT;
             else if (operand.startsWith("<")) mode = AddressingModeType.DIRECT;
+            else if (operand.startsWith(">")) mode = AddressingModeType.EXTENDED;
             else if (operand.contains(",")) mode = AddressingModeType.INDEXED;
             else if (labels.containsKey(operand.toUpperCase())) mode = AddressingModeType.RELATIVE;
             else mode = AddressingModeType.EXTENDED;
@@ -122,9 +124,20 @@ public class Assembler {
                     break;
 
                 case EXTENDED:
-                    int extAddr = parseValue(operand);
+                    int extAddr = parseValue(operand.replace(">", ""));
                     bytes.add((byte) (extAddr >> 8));
                     bytes.add((byte) (extAddr & 0xFF));
+                    break;
+
+                case EXTENDED_INDIRECT:
+                    // Format: [$2000] ou [> $2000]
+                    // Ajouter un marqueur 0xFE pour indiquer le mode indirect
+                    bytes.add((byte) 0xFE);
+                    String indirectOperand = operand.substring(1, operand.length() - 1).trim();
+                    indirectOperand = indirectOperand.replace(">", "").trim();
+                    int indirectAddr = parseValue(indirectOperand);
+                    bytes.add((byte) (indirectAddr >> 8));
+                    bytes.add((byte) (indirectAddr & 0xFF));
                     break;
 
                 case INDEXED:
@@ -175,6 +188,7 @@ public class Assembler {
         staMap.put(AddressingModeType.DIRECT, 0x97);
         staMap.put(AddressingModeType.INDEXED, 0xA7);
         staMap.put(AddressingModeType.EXTENDED, 0xB7);
+        staMap.put(AddressingModeType.EXTENDED_INDIRECT, 0xB7);
         opcodeMap.put("STA", staMap);
         
         // STB (D7, E7, F7)
@@ -182,6 +196,7 @@ public class Assembler {
         stbMap.put(AddressingModeType.DIRECT, 0xD7);
         stbMap.put(AddressingModeType.INDEXED, 0xE7);
         stbMap.put(AddressingModeType.EXTENDED, 0xF7);
+        stbMap.put(AddressingModeType.EXTENDED_INDIRECT, 0xF7);
         opcodeMap.put("STB", stbMap);
         
         // ===== INSTRUCTIONS 16-bit D (LDD, STD, ADDD, SUBD, CMPD) =====
@@ -190,12 +205,14 @@ public class Assembler {
         lddMap.put(AddressingModeType.DIRECT, 0xDC);
         lddMap.put(AddressingModeType.INDEXED, 0xEC);
         lddMap.put(AddressingModeType.EXTENDED, 0xFC);
+        lddMap.put(AddressingModeType.EXTENDED_INDIRECT, 0xFC);
         opcodeMap.put("LDD", lddMap);
         
         Map<AddressingModeType, Integer> stdMap = new HashMap<>();
         stdMap.put(AddressingModeType.DIRECT, 0x10DD);
         stdMap.put(AddressingModeType.INDEXED, 0x10ED);
         stdMap.put(AddressingModeType.EXTENDED, 0x10FD);
+        stdMap.put(AddressingModeType.EXTENDED_INDIRECT, 0x10FD);
         opcodeMap.put("STD", stdMap);
         
         Map<AddressingModeType, Integer> adddMap = new HashMap<>();
@@ -203,6 +220,7 @@ public class Assembler {
         adddMap.put(AddressingModeType.DIRECT, 0xD3);
         adddMap.put(AddressingModeType.INDEXED, 0xE3);
         adddMap.put(AddressingModeType.EXTENDED, 0xF3);
+        adddMap.put(AddressingModeType.EXTENDED_INDIRECT, 0xF3);
         opcodeMap.put("ADDD", adddMap);
         
         Map<AddressingModeType, Integer> subdMap = new HashMap<>();
@@ -210,6 +228,7 @@ public class Assembler {
         subdMap.put(AddressingModeType.DIRECT, 0x93);
         subdMap.put(AddressingModeType.INDEXED, 0xA3);
         subdMap.put(AddressingModeType.EXTENDED, 0xB3);
+        subdMap.put(AddressingModeType.EXTENDED_INDIRECT, 0xB3);
         opcodeMap.put("SUBD", subdMap);
         
         Map<AddressingModeType, Integer> cmpdMap = new HashMap<>();
@@ -217,6 +236,7 @@ public class Assembler {
         cmpdMap.put(AddressingModeType.DIRECT, 0x1093);
         cmpdMap.put(AddressingModeType.INDEXED, 0x10A3);
         cmpdMap.put(AddressingModeType.EXTENDED, 0x10B3);
+        cmpdMap.put(AddressingModeType.EXTENDED_INDIRECT, 0x10B3);
         opcodeMap.put("CMPD", cmpdMap);
 
         // ===== INSTRUCTIONS D'ADDITION (ADD) =====
@@ -433,6 +453,7 @@ public class Assembler {
         map.put(AddressingModeType.DIRECT, dir);
         map.put(AddressingModeType.INDEXED, idx);
         map.put(AddressingModeType.EXTENDED, ext);
+        map.put(AddressingModeType.EXTENDED_INDIRECT, ext); // Indirect utilise le même opcode que EXTENDED
         return map;
     }
 

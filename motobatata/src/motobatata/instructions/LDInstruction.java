@@ -10,6 +10,7 @@ public class LDInstruction implements Instruction {
     public static final int DIRECT = 1;
     public static final int EXTENDED = 2;
     public static final int INDEXED_X = 3;
+    public static final int EXTENDED_INDIRECT = 4;
 
     private final String mnemonic;
     private final boolean useA;
@@ -25,6 +26,10 @@ public class LDInstruction implements Instruction {
     public void execute(CPU cpu, Memory memory) {
 
         int value;
+        
+        // Vérifier si le mode indirect est activé
+        boolean isIndirect = cpu.isExtendedIndirectMode();
+        cpu.setExtendedIndirectMode(false); // Réinitialiser pour l'instruction suivante
 
         switch (mode) {
             case IMM8:
@@ -34,7 +39,14 @@ public class LDInstruction implements Instruction {
                 value = memory.readByte(AddressingMode.direct(cpu));
                 break;
             case EXTENDED:
-                value = memory.readByte(AddressingMode.extended(cpu));
+                if (isIndirect) {
+                    value = memory.readByte(AddressingMode.extendedIndirect(cpu, memory));
+                } else {
+                    value = memory.readByte(AddressingMode.extended(cpu));
+                }
+                break;
+            case EXTENDED_INDIRECT:
+                value = memory.readByte(AddressingMode.extendedIndirect(cpu, memory));
                 break;
             case INDEXED_X:
                 value = memory.readByte(AddressingMode.indexedX(cpu));
@@ -67,6 +79,8 @@ public class LDInstruction implements Instruction {
                 return 2;    // 1 opcode + 1 address
             case EXTENDED:
                 return 3;  // 1 opcode + 2 address
+            case EXTENDED_INDIRECT:
+                return 3;  // 1 opcode + 2 address (indirect)
             case INDEXED_X:
                 return 2; // 1 opcode + 1 postbyte
             default:
