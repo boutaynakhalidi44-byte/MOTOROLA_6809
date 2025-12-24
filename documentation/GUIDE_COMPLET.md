@@ -40,13 +40,13 @@ run.bat
 # Linux/macOS
 ./run.sh
 # ou directement
-java -cp bin motobatata.gui.SimulatorFrame
+java -cp bin motorola.gui.SimulatorFrame
 ```
 
 ### Structure du Projet
 ```
-motobatata/
-├── src/motobatata/
+motorola/
+├── src/motorola/
 │   ├── addressing/       # Modes d'adressage
 │   ├── assembler/        # Assembleur 6809
 │   ├── cpu/              # Cœur du CPU et débogueur
@@ -125,7 +125,7 @@ motobatata/
 
 ### Packages Principaux
 
-#### `motobatata.cpu`
+#### `motorola.cpu`
 - **CPU.java** : Cœur du microprocesseur 6809
   - Gestion de tous les registres (A, B, X, Y, U, S, PC, CC)
   - Pile (stack management)
@@ -136,12 +136,12 @@ motobatata/
   - Exécution pas à pas
   - Inspection de l'état
 
-#### `motobatata.memory`
+#### `motorola.memory`
 - **Memory.java** : Mémoire RAM 64KB
   - Lecture/écriture byte et word
   - Gestion des adresses 16-bit
 
-#### `motobatata.instructions`
+#### `motorola.instructions`
 - **Instruction.java** : Interface pour toutes les instructions
 - **40+ fichiers** : Une classe par opcode
   - Arithmétique : ADD, SUB, ADDD, SUBD
@@ -150,24 +150,24 @@ motobatata/
   - Branchements : BRA, BEQ, JSR, LBRA, LBSR
   - Autres : NOP, HALT, SWI
 
-#### `motobatata.addressing`
+#### `motorola.addressing`
 - **AddressingMode.java** : Calcul des adresses
   - Immédiat (8-bit et 16-bit)
   - Direct (page zéro)
   - Étendu (16-bit)
   - Indexé (X, Y, U, S, PC)
 
-#### `motobatata.decoder`
+#### `motorola.decoder`
 - **InstructionDecoder.java** : Mapping opcode → Instruction
   - Table d'opcodes
   - Factory pour créer les instructions
 
-#### `motobatata.assembler`
+#### `motorola.assembler`
 - **Assembler.java** : Convertit ASM → bytecode
   - Parsing des mnémoniques
   - Résolution des modes d'adressage
 
-#### `motobatata.gui`
+#### `motorola.gui`
 - **SimulatorFrame.java** : Fenêtre principale
 - **ControlPanel.java** : Commandes d'exécution et breakpoints
 - **RegisterPanel.java** : Affichage/édition des registres
