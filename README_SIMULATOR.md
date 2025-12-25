@@ -59,7 +59,7 @@ run.bat
 ./run.sh
 
 # Ou directement
-java -cp bin motobatata.gui.SimulatorFrame
+java -cp bin motorola.gui.SimulatorFrame
 ```
 
 ## 📖 Guide d'Utilisation Rapide
@@ -104,8 +104,8 @@ BRA *           ; Boucle infinie
 ## 🏗️ Architecture
 
 ```
-motobatata/
-├── src/motobatata/
+motorola/
+├── src/motorola/
 │   ├── cpu/              # Cœur du CPU + Debugger
 │   ├── memory/           # Mémoire 64KB
 │   ├── instructions/     # 40+ fichiers d'instructions
@@ -192,7 +192,7 @@ Voir [documentation/GUIDE_COMPLET.md](documentation/GUIDE_COMPLET.md) pour :
 Le code est conçu pour être facilement extensible :
 - Ajouter une instruction : Créer une classe implémentant `Instruction.java`
 - Ajouter un mode d'adressage : Ajouter une méthode dans `AddressingMode.java`
-- Modifier l'interface : Éditer les fichiers GUI dans `motobatata.gui`
+- Modifier l'interface : Éditer les fichiers GUI dans `motorola.gui`
 
 ## 📝 Exemple d'Exécution
 
