@@ -80,7 +80,11 @@ public class AddressingMode {
     public static int indexedGeneric(CPU cpu) {
         int postbyte = cpu.fetchByte();
         int regIndex = (postbyte >> 6) & 0x03;  // Extraire RR (bits 7-6)
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
         int regValue;
         switch (regIndex) {
             case 0: regValue = cpu.getRegX(); break;
@@ -89,6 +93,7 @@ public class AddressingMode {
             case 3: regValue = cpu.getRegS(); break;
             default: regValue = cpu.getRegX();
         }
+<<<<<<< HEAD
 
         int address = decodeIndexedAddress(cpu, postbyte, regValue, regIndex);
         System.out.printf("DEBUG indexedGeneric: postbyte=0x%02X, regIndex=%d, regValue=0x%04X, calculated_address=0x%04X\n", 
@@ -106,6 +111,12 @@ public class AddressingMode {
             return finalAddr;
         }
 
+=======
+        
+        int address = decodeIndexedAddress(cpu, postbyte, regValue, regIndex);
+        System.out.printf("DEBUG indexedGeneric: postbyte=0x%02X, regIndex=%d, regValue=0x%04X, calculated_address=0x%04X\n", 
+            postbyte, regIndex, regValue, address);
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
         return address;
     }
     

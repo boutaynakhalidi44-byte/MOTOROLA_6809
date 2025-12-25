@@ -92,6 +92,7 @@ public class Assembler {
     private List<Byte> assembleInstruction(String mnemonic, String operand, int pc) {
         List<Byte> bytes = new ArrayList<>();
 
+<<<<<<< HEAD
         // Traitement spécial pour EXG et TFR (instructions avec postbyte)
         if ((mnemonic.equals("EXG") || mnemonic.equals("TFR")) && operand != null) {
             int opcode = mnemonic.equals("EXG") ? 0x1E : 0x1F;
@@ -121,6 +122,8 @@ public class Assembler {
             }
         }
 
+=======
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
         // Définir les modes d'adressage
         AddressingModeType mode = null;
         if (operand != null) {
@@ -221,9 +224,15 @@ public class Assembler {
                     String offsetStr = indexParts[0].trim().toUpperCase();
                     String registerPart = indexParts[1].trim().toUpperCase();
                     
+<<<<<<< HEAD
                     // Vérifier si c'est un offset accumulateur (A, B, ou D)
                     if (offsetStr.equals("A") || offsetStr.equals("B") || offsetStr.equals("D")) {
                         // Mode accumulateur offset: A,X / B,Y / D,X, etc.
+=======
+                    // Vérifier si c'est un offset accumulateur (A ou B)
+                    if (offsetStr.equals("A") || offsetStr.equals("B")) {
+                        // Mode accumulateur offset: A,X / B,Y, etc.
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
                         byte acPostbyte = generateAccumulatorIndexedPostbyte(offsetStr, registerPart);
                         bytes.add(acPostbyte);
                     } else if (offsetStr.isEmpty()) {
@@ -270,8 +279,13 @@ public class Assembler {
                         // Mode [,X] sans offset
                         byte indPostbyte = generateIndirectIndexedPostbyte(indRegisterPart, 0, true);
                         bytes.add(indPostbyte);
+<<<<<<< HEAD
                     } else if (indOffsetStr.equals("A") || indOffsetStr.equals("B") || indOffsetStr.equals("D")) {
                         // Mode [A,X] ou [B,X] ou [D,X]
+=======
+                    } else if (indOffsetStr.equals("A") || indOffsetStr.equals("B")) {
+                        // Mode [A,X] ou [B,X]
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
                         byte indPostbyte = generateIndirectAccumulatorIndexedPostbyte(indOffsetStr, indRegisterPart);
                         bytes.add(indPostbyte);
                     } else {
@@ -315,6 +329,7 @@ public class Assembler {
      * Génère le postbyte pour accumulator offset indirect indexing ([A,X], [B,Y], etc.)
      */
     private byte generateIndirectAccumulatorIndexedPostbyte(String accum, String registerPart) {
+<<<<<<< HEAD
         int accumBit;
         if (accum.equals("A")) {
             accumBit = 0x06;
@@ -334,6 +349,17 @@ public class Assembler {
         else if (registerPart.equals("PC")) return (byte) (0x90 | accumBit | 0x08);
 
         return (byte) (0x10 | accumBit);
+=======
+        int accumBit = accum.equals("A") ? 0x06 : 0x05;
+        
+        if (registerPart.equals("X")) return (byte) (0x90 | accumBit);
+        else if (registerPart.equals("Y")) return (byte) (0xB0 | accumBit);
+        else if (registerPart.equals("U")) return (byte) (0xD0 | accumBit);
+        else if (registerPart.equals("S")) return (byte) (0xF0 | accumBit);
+        else if (registerPart.equals("PC")) return (byte) (0x90 | accumBit + 0x08);
+        
+        return (byte) (0x90 | accumBit);
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
     }
     
     /**
@@ -343,12 +369,20 @@ public class Assembler {
         int regBits = 0;
         String reg = registerPart.replaceAll("[+\\-]", "").toUpperCase();
         
+<<<<<<< HEAD
         // RR bits in positions 7-6: X=00, Y=01, U=10, S=11. Keep consistent with generateIndexedPostbyte
         if (reg.equals("X")) regBits = 0x00;
         else if (reg.equals("Y")) regBits = 0x40;
         else if (reg.equals("U")) regBits = 0x80;
         else if (reg.equals("S")) regBits = 0xC0;
         else if (reg.equals("PC")) regBits = 0x80 | 0x08;
+=======
+        if (reg.equals("X")) regBits = 0x90;
+        else if (reg.equals("Y")) regBits = 0xB0;
+        else if (reg.equals("U")) regBits = 0xD0;
+        else if (reg.equals("S")) regBits = 0xF0;
+        else if (reg.equals("PC")) regBits = 0x90 + 0x08;
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
         
         // Vérifier les modificateurs
         if (registerPart.contains("++")) {
@@ -360,8 +394,13 @@ public class Assembler {
         } else if (registerPart.startsWith("-")) {
             return (byte) (regBits | 0x0F);
         } else if (noOffset) {
+<<<<<<< HEAD
             // [,X] sans offset -> set E bit (0x10) and mode 0x04
             return (byte) (regBits | 0x10 | 0x04);
+=======
+            // [,X] sans offset
+            return (byte) (regBits | 0x04);
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
         } else if (offset >= -16 && offset <= 15) {
             // 5-bit offset
             int offsetBits = offset & 0x1F;
@@ -380,6 +419,7 @@ public class Assembler {
      * A,X=0x86, B,X=0x85, A,Y=0xA6, B,Y=0xA5, etc.
      */
     private byte generateAccumulatorIndexedPostbyte(String accum, String registerPart) {
+<<<<<<< HEAD
         int accumBit;
         if (accum.equals("A")) {
             accumBit = 0x06;  // 0110 pour A
@@ -390,6 +430,9 @@ public class Assembler {
         } else {
             accumBit = 0x06;  // défaut A
         }
+=======
+        int accumBit = accum.equals("A") ? 0x06 : 0x05;
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
         
         // Accumulator offset requires E bit (bit 4 = 1, i.e. 0x10)
         if (registerPart.equals("X")) return (byte) (0x10 | accumBit);  // RR=00 for X, E=1
@@ -591,7 +634,16 @@ public class Assembler {
         clrMap.put(AddressingModeType.EXTENDED, 0x7F);
         opcodeMap.put("CLR", clrMap);
         
+<<<<<<< HEAD
     // COM removed
+=======
+        // COM (03 DIRECT, 63 INDEXED, 73 EXTENDED)
+        Map<AddressingModeType, Integer> comMap = new HashMap<>();
+        comMap.put(AddressingModeType.DIRECT, 0x03);
+        comMap.put(AddressingModeType.INDEXED, 0x63);
+        comMap.put(AddressingModeType.EXTENDED, 0x73);
+        opcodeMap.put("COM", comMap);
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
         
         // NEG (00 DIRECT, 60 INDEXED, 70 EXTENDED)
         Map<AddressingModeType, Integer> negMap = new HashMap<>();
@@ -607,7 +659,30 @@ public class Assembler {
         tstMap.put(AddressingModeType.EXTENDED, 0x7D);
         opcodeMap.put("TST", tstMap);
         
+<<<<<<< HEAD
     // Rotation/shift instructions ASR/LSR/ROL removed
+=======
+        // ASR (07 DIRECT, 67 INDEXED, 77 EXTENDED)
+        Map<AddressingModeType, Integer> asrMap = new HashMap<>();
+        asrMap.put(AddressingModeType.DIRECT, 0x07);
+        asrMap.put(AddressingModeType.INDEXED, 0x67);
+        asrMap.put(AddressingModeType.EXTENDED, 0x77);
+        opcodeMap.put("ASR", asrMap);
+        
+        // LSR (04 DIRECT, 64 INDEXED, 74 EXTENDED)
+        Map<AddressingModeType, Integer> lsrMap = new HashMap<>();
+        lsrMap.put(AddressingModeType.DIRECT, 0x04);
+        lsrMap.put(AddressingModeType.INDEXED, 0x64);
+        lsrMap.put(AddressingModeType.EXTENDED, 0x74);
+        opcodeMap.put("LSR", lsrMap);
+        
+        // ROL (09 DIRECT, 69 INDEXED, 79 EXTENDED)
+        Map<AddressingModeType, Integer> rolMap = new HashMap<>();
+        rolMap.put(AddressingModeType.DIRECT, 0x09);
+        rolMap.put(AddressingModeType.INDEXED, 0x69);
+        rolMap.put(AddressingModeType.EXTENDED, 0x79);
+        opcodeMap.put("ROL", rolMap);
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
         
         // ROR (06 DIRECT, 66 INDEXED, 76 EXTENDED)
         Map<AddressingModeType, Integer> rorMap = new HashMap<>();
@@ -616,7 +691,16 @@ public class Assembler {
         rorMap.put(AddressingModeType.EXTENDED, 0x76);
         opcodeMap.put("ROR", rorMap);
         
+<<<<<<< HEAD
     // LSL removed
+=======
+        // LSL (08 DIRECT, 68 INDEXED, 78 EXTENDED)
+        Map<AddressingModeType, Integer> lslMap = new HashMap<>();
+        lslMap.put(AddressingModeType.DIRECT, 0x08);
+        lslMap.put(AddressingModeType.INDEXED, 0x68);
+        lslMap.put(AddressingModeType.EXTENDED, 0x78);
+        opcodeMap.put("LSL", lslMap);
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
 
         // ===== INSTRUCTIONS UNAIRES =====
         // CLR
@@ -632,7 +716,13 @@ public class Assembler {
         noOperandMap.put("DECA", 0x4A);
         noOperandMap.put("DECB", 0x5B);
         
+<<<<<<< HEAD
     // COM removed
+=======
+        // COM
+        noOperandMap.put("COMA", 0x43);
+        noOperandMap.put("COMB", 0x53);
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
         
         // NEG
         noOperandMap.put("NEGA", 0x40);
@@ -642,9 +732,23 @@ public class Assembler {
         noOperandMap.put("TSTA", 0x4D);
         noOperandMap.put("TSTB", 0x5D);
         
+<<<<<<< HEAD
     // Rotation entries ASR/LSR/ROL/LSL removed; ROR kept
     noOperandMap.put("RORA", 0x46);
     noOperandMap.put("RORB", 0x56);
+=======
+        // ===== INSTRUCTIONS DE ROTATION =====
+        noOperandMap.put("ASRA", 0x47);
+        noOperandMap.put("ASRB", 0x57);
+        noOperandMap.put("LSRA", 0x44);
+        noOperandMap.put("LSRB", 0x54);
+        noOperandMap.put("ROLA", 0x49);
+        noOperandMap.put("ROLB", 0x59);
+        noOperandMap.put("RORA", 0x46);
+        noOperandMap.put("RORB", 0x56);
+        noOperandMap.put("LSLA", 0x48);
+        noOperandMap.put("LSLB", 0x58);
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
 
         // ===== BRANCHEMENTS RELATIFS =====
         Map<String, Integer> branchMap = new HashMap<>();
@@ -669,13 +773,32 @@ public class Assembler {
         // ===== INSTRUCTIONS SANS OPÉRANDE =====
         Map<String, Integer> inherentMap = new HashMap<>();
         inherentMap.put("NOP", 0x12);
+<<<<<<< HEAD
     // RTS/RTI removed
+=======
+        inherentMap.put("RTS", 0x39);
+        inherentMap.put("RTI", 0x3B);
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
         inherentMap.put("HALT", 0x3F);
         inherentMap.put("ABX", 0x3A);
         inherentMap.put("MUL", 0x3D);
         inherentMap.put("DAA", 0x19);
 
+<<<<<<< HEAD
     // JMP and JSR removed
+=======
+        // ===== SAUTS =====
+        // JMP et JSR
+        Map<AddressingModeType, Integer> jmpMap = new HashMap<>();
+        jmpMap.put(AddressingModeType.INDEXED, 0x6E);
+        jmpMap.put(AddressingModeType.EXTENDED, 0x7E);
+        opcodeMap.put("JMP", jmpMap);
+        
+        Map<AddressingModeType, Integer> jsrMap = new HashMap<>();
+        jsrMap.put(AddressingModeType.INDEXED, 0xAD);
+        jsrMap.put(AddressingModeType.EXTENDED, 0xBD);
+        opcodeMap.put("JSR", jsrMap);
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
 
         // ===== LDX, LDY, LDS, LDU (16-bit) =====
         Map<AddressingModeType, Integer> ldxMap = new HashMap<>();
@@ -824,6 +947,7 @@ public class Assembler {
             throw new NumberFormatException("Invalid decimal format: " + value);
         }
     }
+<<<<<<< HEAD
     
     /**
      * Retourne le code numérique d'un registre pour EXG et TFR
@@ -843,3 +967,6 @@ public class Assembler {
             default: return -1;
         }
     }}
+=======
+}
+>>>>>>> a69904c8d5e432dba767b3ba7378ddf4d7cd8327
